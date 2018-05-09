@@ -441,7 +441,7 @@ router.post('/check', auth, (req, res) => {
                     message: 'Losed'
                 });
             } else {
-                // player.answered = false
+                player.answered = false
                 player.save().then(result => {
                     res.json({
                         code: 1,

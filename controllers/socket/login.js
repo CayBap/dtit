@@ -30,8 +30,7 @@ module.exports = function(socket) {
                                     socket.emit(CONST.NAMESPACE.AUTH, {
                                         command: CONST.RETURN.AUTH.LOGIN,
                                         code: config.CODE_ERR_WITH_MESS,
-                                        message: 'Authentication failed.',
-
+                                        message: 'Authentication failed.'
                                     });
                                     return;
                                 } else if (user.isLocked) {

@@ -9,6 +9,18 @@ module.exports = function(socket) {
     return function(data) {
         console.log(data);
         if (data.command === 1000 || data.command === 1001) {
+            if (data.command === 1000) {
+                Players.find().then(result => {
+                    for (let i = 0; i < result.length; i++) {
+                        Players.findById(result[i]._id).then(play => {
+
+                            play.answered = false;
+                            play.save();
+                        }).catch(err => console.log(err));
+
+                    }
+                }).catch(err => console.log(err));
+            }
             const question = Question.findById(data.message);
             question.then(quest => {
                 if (!quest) {
@@ -32,8 +44,8 @@ module.exports = function(socket) {
             });
         }
         if (data.command == 911) {
-            socket.broadcast.emit('SOS', {
-                code: config.CODE_OK_WITH_MESS,
+            socket.broadcast.emit('waitAdmin', {
+                command: 911,
                 message: 'stop'
             });
         }
@@ -69,14 +81,16 @@ module.exports = function(socket) {
                     if (quest.correctAnswer != data.req.answer) {
                         Players.findById(this.player_id, function(err, player) {
                             player.set({
-                                status: false
+                                status: false,
+                                answered: true
                             });
                             player.save();
                         });
                     } else {
                         Players.findById(this.player_id, function(err, player) {
                             player.set({
-                                time: data.req.time
+                                time: data.req.time,
+                                answered: true
                             });
                             player.save();
                         });

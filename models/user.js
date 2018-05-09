@@ -22,7 +22,9 @@ var user = new Schema({
     status: Boolean,
     score: Number,
     answered: Boolean
-}, { timestamps: true });
+}, {
+    timestamps: true
+});
 
 
 
