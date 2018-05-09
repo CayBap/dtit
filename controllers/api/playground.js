@@ -349,7 +349,10 @@ router.get('/play', auth, (req, res) => {
         }
     });
 });
-
+router.post('/postChickenScore', auth, (req, res) => {
+    console.log(req.body);
+    return;
+});
 router.post('/answer', auth, (req, res) => {
     if (!global.userCurrentPlay.hasOwnProperty(req.decoded._id)) {
         res.json({
@@ -441,16 +444,11 @@ router.post('/check', auth, (req, res) => {
                     message: 'Losed'
                 });
             } else {
-                player.answered = false
-                player.save().then(result => {
-                    res.json({
-                        code: 1,
-                        message: 'Passed'
-                    });
-                }).catch(err => res.json({
-                    code: CODE_ERR_WITH_MESS,
-                    message: 'Error in server'
-                }));
+                res.json({
+                    code: 1,
+                    message: 'Passed'
+                });
+
 
             }
 

@@ -9,18 +9,18 @@ module.exports = function(socket) {
     return function(data) {
         console.log(data);
         if (data.command === 1000 || data.command === 1001) {
-            if (data.command === 1000) {
-                Players.find().then(result => {
-                    for (let i = 0; i < result.length; i++) {
-                        Players.findById(result[i]._id).then(play => {
 
-                            play.answered = false;
-                            play.save();
-                        }).catch(err => console.log(err));
+            Players.find().then(result => {
+                for (let i = 0; i < result.length; i++) {
+                    Players.findById(result[i]._id).then(play => {
 
-                    }
-                }).catch(err => console.log(err));
-            }
+                        play.answered = false;
+                        play.save();
+                    }).catch(err => console.log(err));
+
+                }
+            }).catch(err => console.log(err));
+
             const question = Question.findById(data.message);
             question.then(quest => {
                 if (!quest) {
