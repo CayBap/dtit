@@ -18,10 +18,22 @@ var user = new Schema({
         ref: 'Role'
     },
     timePassChange: Number,
-    time: Number,
-    status: Boolean,
-    score: Number,
-    answered: Boolean
+    time: {
+        type:Number,
+        default:0
+    },
+    status: {
+        type:Boolean,
+        default:true
+    },
+    score: {
+        type:Number,
+        default:0
+    },
+    answered: {
+        type:Boolean,
+        default:true
+    }
 }, { timestamps: true });
 
 

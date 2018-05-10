@@ -2,7 +2,7 @@ module.exports = {
     EXPRESS_PORT: 4000,
     SOCKET_PORT: 5000,
     secret: 'aiadfethulinh11234!@~!@#',
-    database: 'mongodb://localhost:27017/dtit',
+    database: 'mongodb://localhost:27017/dtitend',
     dbAuth: {
         user: '',
         pass: ''
