@@ -349,36 +349,7 @@ router.get('/play', auth, (req, res) => {
         }
     });
 });
-router.post('/postChickenScore', auth, (req, res) => {
-    console.log(req.body);
-    try {
-        Players.findOne({
-            studentId: req.body.studentId
-        }).then(student => {
-            student.score =Number.parseInt(student.score)+ Number.parseInt(req.body.chickenScore);
-            student.save().then(result => {
-                res.json({
-                    code: config.CODE_OK_WITH_MESS,
-                    status: 0,
-                    message: 'Update điểm bắt gà'
-                });
-            });
-        }).catch(err=>{
-            res.json({
-                code: config.CODE_OK_WITH_MESS,
-                status: 1,
-                message: 'Update điểm bắt gà'
-            });
-        })
-    } catch (error) {
-        res.json({
-            code: config.CODE_OK_WITH_MESS,
-            status: 1,
-            message: 'Update điểm bắt gà'
-        });
-    }
-    return;
-});
+
 router.post('/answer', auth, (req, res) => {
     if (!global.userCurrentPlay.hasOwnProperty(req.decoded._id)) {
         res.json({
@@ -440,7 +411,7 @@ router.post('/answer', auth, (req, res) => {
         });
 });
 router.get('/scoreboard', (req, res) => {
-    const query = Players.find({role:"5ac0b45ee2712117d809782f"}).sort({count:-1}).sort({score:-1}).exec();
+    const query = Players.find({}).populate('userId', 'isOnline');
     query
         .then(players => {
             res.json({
@@ -470,11 +441,16 @@ router.post('/check', auth, (req, res) => {
                     message: 'Losed'
                 });
             } else {
-                res.json({
-                    code: 1,
-                    message: 'Passed'
-                });
-
+                // player.answered = false
+                player.save().then(result => {
+                    res.json({
+                        code: 1,
+                        message: 'Passed'
+                    });
+                }).catch(err => res.json({
+                    code: CODE_ERR_WITH_MESS,
+                    message: 'Error in server'
+                }));
 
             }
 

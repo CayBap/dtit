@@ -9,6 +9,18 @@ module.exports = function(socket) {
     return function(data) {
         console.log(data);
         if (data.command === 1000 || data.command === 1001) {
+
+            Players.find().then(result => {
+                for (let i = 0; i < result.length; i++) {
+                    Players.findById(result[i]._id).then(play => {
+
+                        play.answered = false;
+                        play.save();
+                    }).catch(err => console.log(err));
+
+                }
+            }).catch(err => console.log(err));
+
             const question = Question.findById(data.message);
             question.then(quest => {
                 if (!quest) {
@@ -32,8 +44,8 @@ module.exports = function(socket) {
             });
         }
         if (data.command == 911) {
-            socket.broadcast.emit('SOS', {
-                code: config.CODE_OK_WITH_MESS,
+            socket.broadcast.emit('waitAdmin', {
+                command: 911,
                 message: 'stop'
             });
         }
@@ -41,6 +53,7 @@ module.exports = function(socket) {
             Players.find().then(result => {
                 for (let i = 0; i < result.length; i++) {
                     Players.findById(result[i]._id).then(play => {
+                        play.count = 0;
                         play.status = true;
                         play.time = 0;
                         play.answered = true;
@@ -55,6 +68,19 @@ module.exports = function(socket) {
                 command: 112
             })
         }
+
+        //Update score bắt gà
+        if (data.command == 113) {
+            Players.findOne({
+                studentId: data.req.studentId
+            }).then(student=>{
+                student.score = data.req.score;
+                student.save().then(result=>{
+                    res.json({message:"Cập nhập điểm bắt gà thành công!"});
+                }).catch(err=>res.json({message:"Lỗi cập nhập điểm bắt gà"}));
+            }).catch(err=>res.json({message:"Lỗi cập nhật điểm bắt gà."}));
+        }
+        
         if (data.command == 1997) {
             console.log(data);
             var question = Question.findById(data.req.questionId);
@@ -69,14 +95,17 @@ module.exports = function(socket) {
                     if (quest.correctAnswer != data.req.answer) {
                         Players.findById(this.player_id, function(err, player) {
                             player.set({
-                                status: false
+                                status: false,
+                                answered: true
                             });
                             player.save();
                         });
                     } else {
                         Players.findById(this.player_id, function(err, player) {
                             player.set({
-                                time: data.req.time
+                                count:++player.count,
+                                time: data.req.time,
+                                answered: true
                             });
                             player.save();
                         });

@@ -29,7 +29,7 @@ module.exports = function(req, res, next) {
                     if (!user) {
                         res.json({
                             code: config.CODE_ERR_WITH_MESS,
-                            message: 'Authentication failed.',
+                            message: 'Authentication failed.'
                         });
                         return;
                     } else if (user.isLocked) {

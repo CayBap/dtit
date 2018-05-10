@@ -33,6 +33,10 @@ var user = new Schema({
     answered: {
         type:Boolean,
         default:true
+    },
+    count:{
+        type:Number,
+        default:0
     }
 }, { timestamps: true });
 
